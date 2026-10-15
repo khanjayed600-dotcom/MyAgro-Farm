@@ -1,0 +1,182 @@
+{
+  "entities": {
+    "Order": {
+      "title": "Order",
+      "description": "Customer farm produce order with customer details, items, delivery zone, and fulfillment status",
+      "type": "object",
+      "properties": {
+        "orderNumber": {
+          "type": "string",
+          "description": "Unique human-readable order number e.g. MAF-20261015-1234",
+          "maxLength": 64
+        },
+        "customerName": {
+          "type": "string",
+          "description": "Full name of the customer placing the order",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "customerPhone": {
+          "type": "string",
+          "description": "11-digit Bangladeshi contact phone number",
+          "minLength": 10,
+          "maxLength": 20
+        },
+        "customerEmail": {
+          "type": "string",
+          "description": "Optional email address of the customer",
+          "maxLength": 120
+        },
+        "deliveryAddress": {
+          "type": "object",
+          "description": "Delivery address details including district, thana, and street address"
+        },
+        "deliveryZone": {
+          "type": "string",
+          "description": "Delivery territory zone: kurigram_sadar, rangpur_division, or nationwide",
+          "enum": ["kurigram_sadar", "rangpur_division", "nationwide"]
+        },
+        "items": {
+          "type": "array",
+          "description": "Ordered line items with products and quantities"
+        },
+        "subtotal": {
+          "type": "number",
+          "description": "Subtotal order cost in BDT"
+        },
+        "deliveryCharge": {
+          "type": "number",
+          "description": "Delivery fee based on destination and cart value"
+        },
+        "discount": {
+          "type": "number",
+          "description": "Discount applied via promotional coupon code"
+        },
+        "couponCode": {
+          "type": "string",
+          "description": "Promotional coupon code applied",
+          "maxLength": 30
+        },
+        "total": {
+          "type": "number",
+          "description": "Grand total in BDT including delivery charge minus discounts"
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "Selected payment method",
+          "enum": ["cod", "bkash", "nagad", "bank"]
+        },
+        "paymentStatus": {
+          "type": "string",
+          "description": "Payment verification status",
+          "enum": ["pending", "verified", "failed", "refunded"]
+        },
+        "paymentTrxId": {
+          "type": "string",
+          "description": "Mobile banking transaction ID if paid via bKash/Nagad",
+          "maxLength": 64
+        },
+        "bankSlipRef": {
+          "type": "string",
+          "description": "Bank transfer reference voucher number",
+          "maxLength": 64
+        },
+        "status": {
+          "type": "string",
+          "description": "Current lifecycle status of the order",
+          "enum": [
+            "Pending",
+            "Confirmed",
+            "Processing",
+            "Packed",
+            "Shipped",
+            "Out for Delivery",
+            "Delivered",
+            "Cancelled",
+            "Return Requested",
+            "Refunded"
+          ]
+        },
+        "customerNotes": {
+          "type": "string",
+          "description": "Special delivery instructions provided by customer",
+          "maxLength": 500
+        },
+        "adminNotes": {
+          "type": "string",
+          "description": "Internal notes added by farm management admin",
+          "maxLength": 500
+        },
+        "courierName": {
+          "type": "string",
+          "description": "Assigned courier service name (e.g., Steadfast, Pathao, RedX, Farm Express)",
+          "maxLength": 100
+        },
+        "courierTrackingId": {
+          "type": "string",
+          "description": "Courier tracking consignment number",
+          "maxLength": 100
+        },
+        "userId": {
+          "type": "string",
+          "description": "Optional customer user ID if logged in",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp or server timestamp when order was created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp or server timestamp when order was last updated"
+        },
+        "timeline": {
+          "type": "array",
+          "description": "Ordered status progression timeline entries"
+        }
+      },
+      "required": [
+        "orderNumber",
+        "customerName",
+        "customerPhone",
+        "deliveryAddress",
+        "items",
+        "total",
+        "status"
+      ]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Authorized farm administrator with permissions to view and update orders",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Admin email address"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["admin", "superadmin"]
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Centralized customer orders placed from any device, accessible in real-time by admins"
+    },
+    "/admins/{adminUid}": {
+      "schema": "Admin",
+      "description": "List of authorized administrator accounts verified for order management"
+    }
+  }
+}

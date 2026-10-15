@@ -1,0 +1,8 @@
+{
+  "name": "Remix MyAgro Farm",
+  "description": "Premium farm-to-table e-commerce platform delivering authentic, fresh, and traceable organic produce directly to customers across Bangladesh.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
